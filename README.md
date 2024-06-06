@@ -69,4 +69,4 @@ node dist/index.js --privateKey=REPLACE_WITH_PRIVATE_KEY --walletAddress=REPLACE
 To stop it press crtl+c in the command line.
 
 > [!TIP] 
-> If you run into any errors, open an issue here, or [join the discord](https://discord.gg/m8rDJwzqRP).
+> If you run into any errors, [open an issue here](https://github.com/degenfrends/pump-bump/issues/new), or [join the discord](https://discord.gg/m8rDJwzqRP).
