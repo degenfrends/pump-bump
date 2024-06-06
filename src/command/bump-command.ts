@@ -1,22 +1,22 @@
-import getBalance from '../service/solana/get-balance';
-import getTokenAccount from '../service/solana/get-token-account';
-import getTokenBalance from '../service/solana/get-token-balance';
-import { pumpFunBuy, pumpFunSell } from './../service/pumpfun/swap';
-import { TransactionMode } from './../service/pumpfun/types';
+import PumpFunTrader from '@degenfrends/solana-pumpfun-trader';
+import getBalance from '../solana/get-balance';
+import getTokenAccount from '../solana/get-token-account';
+import getTokenBalance from '../solana/get-token-balance';
 import { config } from 'dotenv';
 config();
 
 export default class BumpCommand {
     private bumperPrivateKey: string;
     private mintAddress: string;
-    private transactionMode: TransactionMode;
+    private isSimulation: boolean;
     private walletAddress: string;
-
-    constructor(privateKey: string, mintAddress: string, walletAddress: string, mode: TransactionMode) {
+    private pumpFunTrader: PumpFunTrader;
+    constructor(privateKey: string, mintAddress: string, walletAddress: string, isSimulation: boolean = true) {
         this.bumperPrivateKey = privateKey;
         this.mintAddress = mintAddress;
         this.walletAddress = walletAddress;
-        this.transactionMode = mode;
+        this.isSimulation = isSimulation;
+        this.pumpFunTrader = new PumpFunTrader();
     }
     async main() {
         const tokenAccount = await getTokenAccount(this.walletAddress, this.mintAddress);
@@ -37,9 +37,16 @@ export default class BumpCommand {
             const solBalance = await getBalance(this.walletAddress);
             if (solBalance < solIn + sellThreshold) {
                 console.log('Insufficient balance to perform the transaction');
-                await pumpFunSell(this.transactionMode, this.bumperPrivateKey, this.mintAddress, tokenBalance, priorityFeeInSol, slippageDecimal);
+                await this.pumpFunTrader.sell(
+                    this.bumperPrivateKey,
+                    this.mintAddress,
+                    tokenBalance,
+                    priorityFeeInSol,
+                    slippageDecimal,
+                    this.isSimulation
+                );
             }
-            await pumpFunBuy(this.transactionMode, this.bumperPrivateKey, this.mintAddress, solIn, priorityFeeInSol, slippageDecimal);
+            await this.pumpFunTrader.buy(this.bumperPrivateKey, this.mintAddress, solIn, priorityFeeInSol, slippageDecimal, this.isSimulation);
             console.log('Transaction successful');
         } catch (error) {
             console.error('Error in main function:', error);
