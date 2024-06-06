@@ -1,6 +1,6 @@
 # Pump Bump - A pump.fun bumping bot
 
-💊 A free to use bumping/bump bot for pump.fun
+💊 A free to use bumping/bump bot for pump.fun! [join the discord](https://discord.gg/m8rDJwzqRP), frend!
 
 ![Static Badge](https://img.shields.io/badge/degen-100%25-pink)
 ![X (formerly Twitter) URL](https://img.shields.io/twitter/url?url=https%3A%2F%2Fx.com%2Fkryptobrah&label=Twitter%2FX)
@@ -8,15 +8,20 @@
 > [!CAUTION] 
 > Do not use your main wallet with this bot, since you have to expose your private key to your command line and if your computer gets/is compromissed, attackers can read your private key from the command line history.
 
+> [!CAUTION] 
+> If you somehow lose your money while using this bot, it is not our fault. We use this bot ourselves in exact this version and we do our best to provide a functioning bot, but in any case of malfunctioning or misonfiguration it is possible to lose your money. So be careful and check always if you got everything correct, before you start the bot!
+
 ## Requirements
 You need a fresh Solana wallet with not more than what you want to use for bumping! This is important, since you have to expose your private key to your command line and if your computer gets/is compromissed, attackers can read your private key from the command line history.
+
+You need to export the private key of that Solana wallet.
 
 You need to have NodeJS Version >= 20 installed.
 
 [Download NodeJS here](https://nodejs.org/) for your operating system and run the installer!
 
 > [!TIP] 
-> If you have problems to understand all of this, [join the discord]()!
+> If you have problems to understand all of this, [join the discord](https://discord.gg/m8rDJwzqRP)!
 
 ## Installation
 [Download the ZIP file](https://github.com/degenfrends/pump-bump/archive/refs/heads/main.zip) and unpack it, or clone the repository.
@@ -62,3 +67,6 @@ node dist/index.js --privateKey=REPLACE_WITH_PRIVATE_KEY --walletAddress=REPLACE
 ```
 
 To stop it press crtl+c in the command line.
+
+> [!TIP] 
+> If you run into any errors, open an issue here, or [join the discord](https://discord.gg/m8rDJwzqRP).
