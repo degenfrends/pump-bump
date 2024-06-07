@@ -21,7 +21,7 @@ You need to have NodeJS Version >= 20 installed.
 [Download NodeJS here](https://nodejs.org/) for your operating system and run the installer!
 
 > [!TIP] 
-> If you have problems to understand all of this, [join the discord](https://discord.gg/m8rDJwzqRP)!
+> If you have problems to understand all of this, [join the discord](https://discord.gg/HUVAbet2Dp)!
 
 ## Installation
 [Download the ZIP file](https://github.com/degenfrends/pump-bump/archive/refs/heads/main.zip) and unpack it, or clone the repository.
@@ -69,4 +69,4 @@ node dist/index.js --privateKey=REPLACE_WITH_PRIVATE_KEY --walletAddress=REPLACE
 To stop it press crtl+c in the command line.
 
 > [!TIP] 
-> If you run into any errors, [open an issue here](https://github.com/degenfrends/pump-bump/issues/new), or [join the discord](https://discord.gg/m8rDJwzqRP).
+> If you run into any errors, [open an issue here](https://github.com/degenfrends/pump-bump/issues/new), or [join the discord](https://discord.gg/HUVAbet2Dp).
