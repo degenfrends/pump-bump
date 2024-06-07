@@ -1,6 +1,6 @@
 # Pump Bump - A pump.fun bumping bot
 
-💊 A free to use bumping/bump bot for pump.fun! [join the discord](https://discord.gg/m8rDJwzqRP), frend!
+💊 A free to use bumping/bump bot for pump.fun! [join the discord](https://discord.gg/HUVAbet2Dp), frend!
 
 ![Static Badge](https://img.shields.io/badge/degen-100%25-pink)
 ![X (formerly Twitter) URL](https://img.shields.io/twitter/url?url=https%3A%2F%2Fx.com%2Fkryptobrah&label=Twitter%2FX)
@@ -46,7 +46,7 @@ BUY_INTERVAL=15
 # Treshold when the tokens are sold. to not crash the chart too much.
 SELL_TRESHOLD=0.2
 # The amount in Solana you want to add as priorioty fee for each transaction.
-PRIORITY_FEE=0
+PRIORITY_FEE=0.00003
 # Slipage in decimals. 0.1 = 10%
 SLIPPAGE=0.25
 ```
