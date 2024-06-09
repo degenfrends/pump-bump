@@ -3,6 +3,7 @@
 💊 A free to use bumping/bump bot for pump.fun! [join the discord](https://discord.gg/HUVAbet2Dp), frend!
 
 ![Static Badge](https://img.shields.io/badge/degen-100%25-pink)
+![GitHub Repo stars](https://img.shields.io/github/stars/degenfrends/solana-rugchecker)
 ![X (formerly Twitter) URL](https://img.shields.io/twitter/url?url=https%3A%2F%2Fx.com%2Fkryptobrah&label=Twitter%2FX)
 
 > [!CAUTION] 
