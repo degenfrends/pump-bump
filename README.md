@@ -12,6 +12,8 @@
 > [!CAUTION] 
 > If you somehow lose your money while using this bot, it is not our fault. We use this bot ourselves in exact this version and we do our best to provide a functioning bot, but in any case of malfunctioning or misonfiguration it is possible to lose your money. So be careful and check always if you got everything correct, before you start the bot!
 
+## If you made some money off of this and you want to contribute to the ongoing development, you can send some SOL to this address: xe18XoG9HpgpmZ6C4GLAfnDtD7xGc6dEjen7NfF3V9g
+
 ## Requirements
 You need a fresh Solana wallet with not more than what you want to use for bumping! This is important, since you have to expose your private key to your command line and if your computer gets/is compromissed, attackers can read your private key from the command line history.
 
