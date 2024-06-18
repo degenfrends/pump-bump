@@ -50,7 +50,12 @@ SELL_TRESHOLD=0.2
 PRIORITY_FEE=0.00003
 # Slipage in decimals. 0.1 = 10%
 SLIPPAGE=0.25
+# The url to your solana node. Helius, quiknode, etc. should all be fine in free tier. Just not the solana default one.
+RPC_URL="https://api.mainnet-beta.solana.com"
 ```
+
+> [!CAUTION] 
+> You need a rpc endpoint from helius, triton, quiknode or whatelse. The free tiers should be working. I used helius and quiknode.
 
 Save the .env file.
 

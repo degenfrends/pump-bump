@@ -17,6 +17,7 @@ export default class BumpCommand {
         this.walletAddress = walletAddress;
         this.isSimulation = isSimulation;
         this.pumpFunTrader = new PumpFunTrader();
+        this.pumpFunTrader.setSolanaRpcUrl(String(process.env.RPC_URL));
     }
     async main() {
         const tokenAccount = await getTokenAccount(this.walletAddress, this.mintAddress);
@@ -26,21 +27,25 @@ export default class BumpCommand {
             await this.bump(tokenAccount);
         }, interval * 1000);
     }
-    async bump(tokenAccount: string) {
+    async bump(tokenAccount: string | undefined) {
         console.log('Bumping token:', tokenAccount);
         const solIn = Number(process.env.BUY_AMOUNT);
         const slippageDecimal = Number(process.env.SLIPPAGE);
         const priorityFeeInSol = Number(process.env.PRIORITY_FEE);
         const sellThreshold = Number(process.env.SELL_THRESHOLD);
         try {
-            const tokenBalance = await getTokenBalance(tokenAccount);
+            let tokenBalance = 0;
+
+            if (tokenAccount) {
+                tokenBalance = await getTokenBalance(tokenAccount);
+            }
             const solBalance = await getBalance(this.walletAddress);
             if (solBalance < solIn + sellThreshold) {
                 console.log('Insufficient balance to perform the transaction');
                 await this.pumpFunTrader.sell(
                     this.bumperPrivateKey,
                     this.mintAddress,
-                    tokenBalance,
+                    tokenBalance * 1000000,
                     priorityFeeInSol,
                     slippageDecimal,
                     this.isSimulation
