@@ -21,6 +21,7 @@ class BumpCommand {
         this.walletAddress = walletAddress;
         this.isSimulation = isSimulation;
         this.pumpFunTrader = new solana_pumpfun_trader_1.default();
+        this.pumpFunTrader.setSolanaRpcUrl(String(process.env.RPC_URL));
     }
     async main() {
         const tokenAccount = await (0, get_token_account_1.default)(this.walletAddress, this.mintAddress);
