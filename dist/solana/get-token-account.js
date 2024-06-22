@@ -6,7 +6,6 @@ const dotenv_1 = require("dotenv");
 async function getTokenAccount(walletAddress, mintAddress) {
     const connection = new web3_js_1.Connection(String(process.env.RPC_URL), 'confirmed');
     const wallet = new web3_js_1.PublicKey(walletAddress);
-    console.log('Wallet:', wallet);
     const account = await connection.getTokenAccountsByOwner(wallet, {
         mint: new web3_js_1.PublicKey(mintAddress)
     });

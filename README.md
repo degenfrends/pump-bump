@@ -6,8 +6,15 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/degenfrends/solana-rugchecker)
 ![X (formerly Twitter) URL](https://img.shields.io/twitter/url?url=https%3A%2F%2Fx.com%2Fkryptobrah&label=Twitter%2FX)
 
+__Advanced version of this bot for sale in [discord](https://discord.gg/HUVAbet2Dp)!__
+* __Buy&Sell in same transaction__
+* __Bump in random intervalls__
+* __Bump for random amount__
+* __Stealth sells don't show up on Pump.fun's website, but cost more transaction fees__
+* __Multiple wallet support__
+
 > [!CAUTION] 
-> Do not use your main wallet with this bot, since you have to expose your private key to your command line and if your computer gets/is compromissed, attackers can read your private key from the command line history.
+> Do not use your main wallet with this bot, since you have to expose your private key to your command line and if your computer gets/is compromissed, attackers can read your private key from the command line history or the environment variables.
 
 > [!CAUTION] 
 > If you somehow lose your money while using this bot, it is not our fault. We use this bot ourselves in exact this version and we do our best to provide a functioning bot, but in any case of malfunctioning or misonfiguration it is possible to lose your money. So be careful and check always if you got everything correct, before you start the bot!
@@ -15,7 +22,7 @@
 ## If you made some money off of this and you want to contribute to the ongoing development, you can send some SOL to this address: xe18XoG9HpgpmZ6C4GLAfnDtD7xGc6dEjen7NfF3V9g
 
 ## Requirements
-You need a fresh Solana wallet with not more than what you want to use for bumping! This is important, since you have to expose your private key to your command line and if your computer gets/is compromissed, attackers can read your private key from the command line history.
+You need a fresh Solana wallet with not more than what you want to use for bumping! This is important, since you have to expose your private key to your command line and if your computer gets/is compromissed, attackers can read your private key from the command line history or your environment variables.
 
 You need to export the private key of that Solana wallet.
 
@@ -54,6 +61,8 @@ PRIORITY_FEE=0.00003
 SLIPPAGE=0.25
 # The url to your solana node. Helius, quiknode, etc. should all be fine in free tier. Just not the solana default one.
 RPC_URL="https://api.mainnet-beta.solana.com"
+# Your exported private key phrase
+PRIVATE_KEY="1234abcde1234abcde12345abcde"
 ```
 
 > [!CAUTION] 
@@ -67,6 +76,10 @@ Open your console/command line/terminal and go to the directory in which you hav
 First test if everything is working as expected with the argument --transactionMode=0 the transaction will not be really executed, instead it is only simmulated.
 ```bash
 node dist/index.js --privateKey=REPLACE_WITH_PRIVATE_KEY --walletAddress=REPLACE_WITH_WALLET_ADDRESS --tokenAddress=REPLACE_WITH_TOKEN_ADDRESS --transactionMode=0
+```
+If you save your private key in the .env file, you don't need to pass it as argument.
+```bash
+node dist/index.js --walletAddress=REPLACE_WITH_WALLET_ADDRESS --tokenAddress=REPLACE_WITH_TOKEN_ADDRESS --transactionMode=0
 ```
 
 If there are no errors thrown and you are happy with your settings, you can run the bot now.

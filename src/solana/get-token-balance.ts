@@ -1,4 +1,4 @@
-import { Connection, LAMPORTS_PER_SOL, PublicKey, clusterApiUrl } from '@solana/web3.js';
+import { Connection, PublicKey } from '@solana/web3.js';
 import { config } from 'dotenv';
 config();
 const { getAccount, getMint } = require('@solana/spl-token');

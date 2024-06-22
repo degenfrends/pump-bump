@@ -21,7 +21,6 @@ export default class BumpCommand {
     }
     async main() {
         const tokenAccount = await getTokenAccount(this.walletAddress, this.mintAddress);
-        console.log('Token account:', tokenAccount);
         const interval = Number(process.env.BUY_INTERVAL);
         setInterval(async () => {
             await this.bump(tokenAccount);
@@ -30,18 +29,24 @@ export default class BumpCommand {
     async bump(tokenAccount: string | undefined) {
         console.log('Bumping token:', tokenAccount);
         const solIn = Number(process.env.BUY_AMOUNT);
+        console.log('Sol in:', solIn);
         const slippageDecimal = Number(process.env.SLIPPAGE);
+        console.log('Slippage:', slippageDecimal);
         const priorityFeeInSol = Number(process.env.PRIORITY_FEE);
+        console.log('Priority fee:', priorityFeeInSol);
         const sellThreshold = Number(process.env.SELL_THRESHOLD);
+        console.log('Sell threshold:', sellThreshold);
         try {
             let tokenBalance = 0;
 
             if (tokenAccount) {
                 tokenBalance = await getTokenBalance(tokenAccount);
             }
+            console.log('Token balance:', tokenBalance);
             const solBalance = await getBalance(this.walletAddress);
-            if (solBalance < solIn + sellThreshold) {
-                console.log('Insufficient balance to perform the transaction');
+            console.log('Sol balance:', solBalance);
+            if (solBalance < solIn + sellThreshold && tokenBalance > 0) {
+                console.log('Selling token');
                 await this.pumpFunTrader.sell(
                     this.bumperPrivateKey,
                     this.mintAddress,
@@ -50,9 +55,18 @@ export default class BumpCommand {
                     slippageDecimal,
                     this.isSimulation
                 );
+                console.log('sold token');
             }
-            await this.pumpFunTrader.buy(this.bumperPrivateKey, this.mintAddress, solIn, priorityFeeInSol, slippageDecimal, this.isSimulation);
-            console.log('Transaction successful');
+            console.log('Buying token');
+            const buySignature = await this.pumpFunTrader.buy(
+                this.bumperPrivateKey,
+                this.mintAddress,
+                solIn,
+                priorityFeeInSol,
+                slippageDecimal,
+                this.isSimulation
+            );
+            console.log('Bump successful: ', buySignature);
         } catch (error) {
             console.error('Error in main function:', error);
             this.bump(tokenAccount);
