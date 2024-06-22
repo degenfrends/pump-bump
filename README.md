@@ -10,8 +10,9 @@ __Advanced version of this bot for sale in [discord](https://discord.gg/HUVAbet2
 * __Buy&Sell in same transaction__
 * __Bump in random intervalls__
 * __Bump for random amount__
-* __Stealth sells don't show up on Pump.fun's website, but cost more transaction fees__
+* __Stealth sells__
 * __Multiple wallet support__
+* __I can add any feature you like__
 
 > [!CAUTION] 
 > Do not use your main wallet with this bot, since you have to expose your private key to your command line and if your computer gets/is compromissed, attackers can read your private key from the command line history or the environment variables.
