@@ -73,19 +73,13 @@ Save the .env file.
 
 ## Run the bot
 To run the bot, you need your bumping wallet address, the private key of your bumping wallet and the token address of the token you want to bump.
-Open your console/command line/terminal and go to the directory in which you have unpacked or cloned the repository.
-First test if everything is working as expected with the argument --transactionMode=0 the transaction will not be really executed, instead it is only simmulated.
+Open your console/command line/terminal and go to the directory in which you have unpacked or cloned the repository and execute the following command.
 ```bash
-node dist/index.js --privateKey=REPLACE_WITH_PRIVATE_KEY --walletAddress=REPLACE_WITH_WALLET_ADDRESS --tokenAddress=REPLACE_WITH_TOKEN_ADDRESS --transactionMode=0
+node dist/index.js --privateKey=REPLACE_WITH_PRIVATE_KEY --walletAddress=REPLACE_WITH_WALLET_ADDRESS --tokenAddress=REPLACE_WITH_TOKEN_ADDRESS
 ```
 If you save your private key in the .env file, you don't need to pass it as argument.
 ```bash
-node dist/index.js --walletAddress=REPLACE_WITH_WALLET_ADDRESS --tokenAddress=REPLACE_WITH_TOKEN_ADDRESS --transactionMode=0
-```
-
-If there are no errors thrown and you are happy with your settings, you can run the bot now.
-```bash
-node dist/index.js --privateKey=REPLACE_WITH_PRIVATE_KEY --walletAddress=REPLACE_WITH_WALLET_ADDRESS --tokenAddress=REPLACE_WITH_TOKEN_ADDRESS --transactionMode=1
+node dist/index.js --walletAddress=REPLACE_WITH_WALLET_ADDRESS --tokenAddress=REPLACE_WITH_TOKEN_ADDRESS
 ```
 
 To stop it press crtl+c in the command line.

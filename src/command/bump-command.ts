@@ -13,12 +13,9 @@ config();
 export default class BumpCommand {
     private bumperPrivateKey: string;
     private mintAddress: string;
-    private isSimulation: boolean;
     private walletAddress: string;
-    //private pumpFunTrader: PumpFunTrader;
     private provider: any;
     private sdk: PumpFunSDK;
-    private connection: Connection;
     SLIPPAGE_BASIS_POINTS = 100n;
     buyTokens = async (sdk: PumpFunSDK, testAccount: Keypair, mint: PublicKey, solAmount: number) => {
         const buyResults = await sdk.buy(testAccount, mint, BigInt(solAmount * LAMPORTS_PER_SOL), this.SLIPPAGE_BASIS_POINTS, {
@@ -53,14 +50,12 @@ export default class BumpCommand {
         const wallet = new NodeWallet(new Keypair());
         return new AnchorProvider(connection, wallet, { commitment: 'finalized' });
     };
-    constructor(privateKey: string, mintAddress: string, walletAddress: string, isSimulation: boolean = true) {
+    constructor(privateKey: string, mintAddress: string, walletAddress: string) {
         this.bumperPrivateKey = privateKey;
         this.mintAddress = mintAddress;
         this.walletAddress = walletAddress;
-        this.isSimulation = isSimulation;
         this.provider = this.getProvider();
         this.sdk = new PumpFunSDK(this.provider);
-        this.connection = this.provider.connection;
     }
     async main() {
         const tokenAccount = await getTokenAccount(this.walletAddress, this.mintAddress);
