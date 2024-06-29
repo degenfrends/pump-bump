@@ -1,7 +1,8 @@
 import { Connection, PublicKey } from '@solana/web3.js';
 import { config } from 'dotenv';
+import { getAccount, getMint } from '@solana/spl-token';
+
 config();
-const { getAccount, getMint } = require('@solana/spl-token');
 
 export default async function getTokenBalance(tokenAccount: string) {
     const connection = new Connection(String(process.env.RPC_URL), 'confirmed');

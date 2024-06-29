@@ -3,25 +3,69 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const solana_pumpfun_trader_1 = __importDefault(require("@degenfrends/solana-pumpfun-trader"));
+//import PumpFunTrader from '@degenfrends/solana-pumpfun-trader';
 const get_balance_1 = __importDefault(require("../solana/get-balance"));
 const get_token_account_1 = __importDefault(require("../solana/get-token-account"));
 const get_token_balance_1 = __importDefault(require("../solana/get-token-balance"));
+const pumpdotfun_sdk_1 = require("pumpdotfun-sdk");
+const nodewallet_1 = __importDefault(require("@coral-xyz/anchor/dist/cjs/nodewallet"));
+const anchor_1 = require("@coral-xyz/anchor");
 const dotenv_1 = require("dotenv");
+const web3_js_1 = require("@solana/web3.js");
+const bs58_1 = __importDefault(require("bs58"));
 (0, dotenv_1.config)();
 class BumpCommand {
     bumperPrivateKey;
     mintAddress;
     isSimulation;
     walletAddress;
-    pumpFunTrader;
+    //private pumpFunTrader: PumpFunTrader;
+    provider;
+    sdk;
+    connection;
+    SLIPPAGE_BASIS_POINTS = 100n;
+    buyTokens = async (sdk, testAccount, mint, solAmount) => {
+        const buyResults = await sdk.buy(testAccount, mint, BigInt(solAmount * web3_js_1.LAMPORTS_PER_SOL), this.SLIPPAGE_BASIS_POINTS, {
+            unitLimit: 250000,
+            unitPrice: 250000
+        });
+        if (buyResults.success) {
+            console.log('Buy successful');
+        }
+        else {
+            console.log('Buy failed');
+        }
+    };
+    sellTokens = async (sdk, testAccount, mint, tokenAmount) => {
+        const sellResults = await sdk.sell(testAccount, mint, BigInt(tokenAmount * Math.pow(10, pumpdotfun_sdk_1.DEFAULT_DECIMALS)), this.SLIPPAGE_BASIS_POINTS, {
+            unitLimit: 250000,
+            unitPrice: 250000
+        });
+        if (sellResults.success) {
+            console.log('Sell successful');
+        }
+        else {
+            console.log('Sell failed');
+        }
+    };
+    getProvider = () => {
+        if (!process.env.RPC_URL) {
+            throw new Error('Please set HELIUS_RPC_URL in .env file');
+        }
+        const connection = new web3_js_1.Connection(process.env.RPC_URL || '');
+        const wallet = new nodewallet_1.default(new web3_js_1.Keypair());
+        return new anchor_1.AnchorProvider(connection, wallet, { commitment: 'finalized' });
+    };
     constructor(privateKey, mintAddress, walletAddress, isSimulation = true) {
         this.bumperPrivateKey = privateKey;
         this.mintAddress = mintAddress;
         this.walletAddress = walletAddress;
         this.isSimulation = isSimulation;
-        this.pumpFunTrader = new solana_pumpfun_trader_1.default();
-        this.pumpFunTrader.setSolanaRpcUrl(String(process.env.RPC_URL));
+        //this.pumpFunTrader = new PumpFunTrader();
+        //this.pumpFunTrader.setSolanaRpcUrl(String(process.env.RPC_URL));
+        this.provider = this.getProvider();
+        this.sdk = new pumpdotfun_sdk_1.PumpFunSDK(this.provider);
+        this.connection = this.provider.connection;
     }
     async main() {
         const tokenAccount = await (0, get_token_account_1.default)(this.walletAddress, this.mintAddress);
@@ -40,6 +84,7 @@ class BumpCommand {
         console.log('Priority fee:', priorityFeeInSol);
         const sellThreshold = Number(process.env.SELL_THRESHOLD);
         console.log('Sell threshold:', sellThreshold);
+        const walletPrivateKey = await web3_js_1.Keypair.fromSecretKey(new Uint8Array(bs58_1.default.decode(this.bumperPrivateKey)));
         try {
             let tokenBalance = 0;
             if (tokenAccount) {
@@ -50,12 +95,12 @@ class BumpCommand {
             console.log('Sol balance:', solBalance);
             if (solBalance < solIn + sellThreshold && tokenBalance > 0) {
                 console.log('Selling token');
-                await this.pumpFunTrader.sell(this.bumperPrivateKey, this.mintAddress, tokenBalance * 1000000, priorityFeeInSol, slippageDecimal, this.isSimulation);
-                console.log('sold token');
+                const sellRespponse = await this.sellTokens(this.sdk, walletPrivateKey, new web3_js_1.PublicKey(this.mintAddress), tokenBalance);
+                console.log('sold token: ', sellRespponse);
             }
             console.log('Buying token');
-            const buySignature = await this.pumpFunTrader.buy(this.bumperPrivateKey, this.mintAddress, solIn, priorityFeeInSol, slippageDecimal, this.isSimulation);
-            console.log('Bump successful: ', buySignature);
+            const buyResponse = await this.buyTokens(this.sdk, walletPrivateKey, new web3_js_1.PublicKey(this.mintAddress), solIn);
+            console.log('Bump successful: ', buyResponse);
         }
         catch (error) {
             console.error('Error in main function:', error);
