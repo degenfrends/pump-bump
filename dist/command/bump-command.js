@@ -17,18 +17,12 @@ const bs58_1 = __importDefault(require("bs58"));
 class BumpCommand {
     bumperPrivateKey;
     mintAddress;
-    isSimulation;
     walletAddress;
-    //private pumpFunTrader: PumpFunTrader;
     provider;
     sdk;
-    connection;
     SLIPPAGE_BASIS_POINTS = 100n;
     buyTokens = async (sdk, testAccount, mint, solAmount) => {
-        const buyResults = await sdk.buy(testAccount, mint, BigInt(solAmount * web3_js_1.LAMPORTS_PER_SOL), this.SLIPPAGE_BASIS_POINTS, {
-            unitLimit: 250000,
-            unitPrice: 250000
-        });
+        const buyResults = await sdk.buy(testAccount, mint, BigInt(solAmount * web3_js_1.LAMPORTS_PER_SOL), this.SLIPPAGE_BASIS_POINTS);
         if (buyResults.success) {
             console.log('Buy successful');
         }
@@ -37,10 +31,7 @@ class BumpCommand {
         }
     };
     sellTokens = async (sdk, testAccount, mint, tokenAmount) => {
-        const sellResults = await sdk.sell(testAccount, mint, BigInt(tokenAmount * Math.pow(10, pumpdotfun_sdk_1.DEFAULT_DECIMALS)), this.SLIPPAGE_BASIS_POINTS, {
-            unitLimit: 250000,
-            unitPrice: 250000
-        });
+        const sellResults = await sdk.sell(testAccount, mint, BigInt(tokenAmount * Math.pow(10, pumpdotfun_sdk_1.DEFAULT_DECIMALS)), this.SLIPPAGE_BASIS_POINTS);
         if (sellResults.success) {
             console.log('Sell successful');
         }
@@ -56,16 +47,12 @@ class BumpCommand {
         const wallet = new nodewallet_1.default(new web3_js_1.Keypair());
         return new anchor_1.AnchorProvider(connection, wallet, { commitment: 'finalized' });
     };
-    constructor(privateKey, mintAddress, walletAddress, isSimulation = true) {
+    constructor(privateKey, mintAddress, walletAddress) {
         this.bumperPrivateKey = privateKey;
         this.mintAddress = mintAddress;
         this.walletAddress = walletAddress;
-        this.isSimulation = isSimulation;
-        //this.pumpFunTrader = new PumpFunTrader();
-        //this.pumpFunTrader.setSolanaRpcUrl(String(process.env.RPC_URL));
         this.provider = this.getProvider();
         this.sdk = new pumpdotfun_sdk_1.PumpFunSDK(this.provider);
-        this.connection = this.provider.connection;
     }
     async main() {
         const tokenAccount = await (0, get_token_account_1.default)(this.walletAddress, this.mintAddress);

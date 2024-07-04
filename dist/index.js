@@ -17,5 +17,5 @@ else {
 const tokenAddress = argv.tokenAddress;
 const walletAddress = argv.walletAddress;
 const transactionMode = argv.transactionMode;
-const bumper = new bump_command_1.default(privateKey, tokenAddress, walletAddress, transactionMode);
+const bumper = new bump_command_1.default(privateKey, tokenAddress, walletAddress);
 bumper.main();

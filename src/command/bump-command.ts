@@ -18,10 +18,7 @@ export default class BumpCommand {
     private sdk: PumpFunSDK;
     SLIPPAGE_BASIS_POINTS = 100n;
     buyTokens = async (sdk: PumpFunSDK, testAccount: Keypair, mint: PublicKey, solAmount: number) => {
-        const buyResults = await sdk.buy(testAccount, mint, BigInt(solAmount * LAMPORTS_PER_SOL), this.SLIPPAGE_BASIS_POINTS, {
-            unitLimit: 250000,
-            unitPrice: 250000
-        });
+        const buyResults = await sdk.buy(testAccount, mint, BigInt(solAmount * LAMPORTS_PER_SOL), this.SLIPPAGE_BASIS_POINTS);
 
         if (buyResults.success) {
             console.log('Buy successful');
@@ -30,10 +27,7 @@ export default class BumpCommand {
         }
     };
     sellTokens = async (sdk: PumpFunSDK, testAccount: Keypair, mint: PublicKey, tokenAmount: number) => {
-        const sellResults = await sdk.sell(testAccount, mint, BigInt(tokenAmount * Math.pow(10, DEFAULT_DECIMALS)), this.SLIPPAGE_BASIS_POINTS, {
-            unitLimit: 250000,
-            unitPrice: 250000
-        });
+        const sellResults = await sdk.sell(testAccount, mint, BigInt(tokenAmount * Math.pow(10, DEFAULT_DECIMALS)), this.SLIPPAGE_BASIS_POINTS);
 
         if (sellResults.success) {
             console.log('Sell successful');
