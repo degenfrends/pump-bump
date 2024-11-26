@@ -16,18 +16,25 @@ export default class BumpCommand {
     private walletAddress: string;
     private provider: any;
     private sdk: PumpFunSDK;
+    private counter: number = 1;
     SLIPPAGE_BASIS_POINTS = 100n;
     buyTokens = async (sdk: PumpFunSDK, testAccount: Keypair, mint: PublicKey, solAmount: number) => {
-        const buyResults = await sdk.buy(testAccount, mint, BigInt(solAmount * LAMPORTS_PER_SOL), this.SLIPPAGE_BASIS_POINTS);
-
+        const buyResults = await sdk.buy(testAccount, mint, BigInt(solAmount * LAMPORTS_PER_SOL), this.SLIPPAGE_BASIS_POINTS, {
+            unitLimit: 250000,
+            unitPrice: 250000
+        });
+        console.log('Buy results:', buyResults);
         if (buyResults.success) {
-            console.log('Buy successful');
+            console.log('Buy successful', buyResults);
         } else {
             console.log('Buy failed');
         }
     };
     sellTokens = async (sdk: PumpFunSDK, testAccount: Keypair, mint: PublicKey, tokenAmount: number) => {
-        const sellResults = await sdk.sell(testAccount, mint, BigInt(tokenAmount * Math.pow(10, DEFAULT_DECIMALS)), this.SLIPPAGE_BASIS_POINTS);
+        const sellResults = await sdk.sell(testAccount, mint, BigInt(tokenAmount * Math.pow(10, DEFAULT_DECIMALS)), this.SLIPPAGE_BASIS_POINTS, {
+            unitLimit: 250000,
+            unitPrice: 250000
+        });
 
         if (sellResults.success) {
             console.log('Sell successful');
@@ -60,26 +67,17 @@ export default class BumpCommand {
     }
     async bump(tokenAccount: string | undefined) {
         console.log('Bumping token:', tokenAccount);
-        const solIn = Number(process.env.BUY_AMOUNT);
-        console.log('Sol in:', solIn);
-        const slippageDecimal = Number(process.env.SLIPPAGE);
-        console.log('Slippage:', slippageDecimal);
-        const priorityFeeInSol = Number(process.env.PRIORITY_FEE);
-        console.log('Priority fee:', priorityFeeInSol);
-        const sellThreshold = Number(process.env.SELL_THRESHOLD);
-        console.log('Sell threshold:', sellThreshold);
         const walletPrivateKey = await Keypair.fromSecretKey(new Uint8Array(bs58.decode(this.bumperPrivateKey)));
+        let solIn = Number(process.env.BUY_AMOUNT);
 
         try {
             let tokenBalance = 0;
-
-            if (tokenAccount) {
-                tokenBalance = await getTokenBalance(tokenAccount);
-            }
-            console.log('Token balance:', tokenBalance);
-            const solBalance = await getBalance(this.walletAddress);
-            console.log('Sol balance:', solBalance);
-            if (solBalance < solIn + sellThreshold && tokenBalance > 0) {
+            if (this.counter >= 2) {
+                if (tokenAccount) {
+                    tokenBalance = await getTokenBalance(tokenAccount);
+                    console.log('Token balance:', tokenBalance);
+                    this.counter = 0;
+                }
                 console.log('Selling token');
                 const sellRespponse = await this.sellTokens(this.sdk, walletPrivateKey, new PublicKey(this.mintAddress), tokenBalance);
                 console.log('sold token: ', sellRespponse);
@@ -87,6 +85,7 @@ export default class BumpCommand {
             console.log('Buying token');
             const buyResponse = await this.buyTokens(this.sdk, walletPrivateKey, new PublicKey(this.mintAddress), solIn);
             console.log('Bump successful: ', buyResponse);
+            this.counter++;
         } catch (error) {
             console.error('Error in main function:', error);
             this.bump(tokenAccount);

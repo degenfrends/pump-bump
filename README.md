@@ -10,9 +10,12 @@ __Advanced version of this bot for sale in [discord](https://discord.gg/HUVAbet2
 * __Buy&Sell in same transaction__
 * __Bump in random intervalls__
 * __Bump for random amount__
+* __Jito Bundles__
 * __Stealth sells__
 * __Multiple wallet support__
 * __I can add any feature you like__
+
+__Advanced pump.fun bundler for sale in [discord](https://discord.gg/HUVAbet2Dp)!__
 
 > [!CAUTION] 
 > Do not use your main wallet with this bot, since you have to expose your private key to your command line and if your computer gets/is compromissed, attackers can read your private key from the command line history or the environment variables.
@@ -54,8 +57,6 @@ The settings are documented, so it shouldn't be a problem for you to set it up a
 BUY_AMOUNT=0.0001
 # The time interval in seconds in which tokens are bought
 BUY_INTERVAL=15
-# Treshold when the tokens are sold. to not crash the chart too much.
-SELL_TRESHOLD=0.2
 # The amount in Solana you want to add as priorioty fee for each transaction.
 PRIORITY_FEE=0.00003
 # Slipage in decimals. 0.1 = 10%

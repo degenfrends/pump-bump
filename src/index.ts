@@ -11,6 +11,5 @@ if (process.env.PRIVATE_KEY) {
 }
 const tokenAddress = argv.tokenAddress;
 const walletAddress = argv.walletAddress;
-const transactionMode = argv.transactionMode;
 const bumper = new BumpCommand(privateKey, tokenAddress, walletAddress);
 bumper.main();

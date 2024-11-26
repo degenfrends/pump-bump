@@ -3,8 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-//import PumpFunTrader from '@degenfrends/solana-pumpfun-trader';
-const get_balance_1 = __importDefault(require("../solana/get-balance"));
 const get_token_account_1 = __importDefault(require("../solana/get-token-account"));
 const get_token_balance_1 = __importDefault(require("../solana/get-token-balance"));
 const pumpdotfun_sdk_1 = require("pumpdotfun-sdk");
@@ -20,18 +18,26 @@ class BumpCommand {
     walletAddress;
     provider;
     sdk;
+    counter = 1;
     SLIPPAGE_BASIS_POINTS = 100n;
     buyTokens = async (sdk, testAccount, mint, solAmount) => {
-        const buyResults = await sdk.buy(testAccount, mint, BigInt(solAmount * web3_js_1.LAMPORTS_PER_SOL), this.SLIPPAGE_BASIS_POINTS);
+        const buyResults = await sdk.buy(testAccount, mint, BigInt(solAmount * web3_js_1.LAMPORTS_PER_SOL), this.SLIPPAGE_BASIS_POINTS, {
+            unitLimit: 250000,
+            unitPrice: 250000
+        });
+        console.log('Buy results:', buyResults);
         if (buyResults.success) {
-            console.log('Buy successful');
+            console.log('Buy successful', buyResults);
         }
         else {
             console.log('Buy failed');
         }
     };
     sellTokens = async (sdk, testAccount, mint, tokenAmount) => {
-        const sellResults = await sdk.sell(testAccount, mint, BigInt(tokenAmount * Math.pow(10, pumpdotfun_sdk_1.DEFAULT_DECIMALS)), this.SLIPPAGE_BASIS_POINTS);
+        const sellResults = await sdk.sell(testAccount, mint, BigInt(tokenAmount * Math.pow(10, pumpdotfun_sdk_1.DEFAULT_DECIMALS)), this.SLIPPAGE_BASIS_POINTS, {
+            unitLimit: 250000,
+            unitPrice: 250000
+        });
         if (sellResults.success) {
             console.log('Sell successful');
         }
@@ -63,24 +69,16 @@ class BumpCommand {
     }
     async bump(tokenAccount) {
         console.log('Bumping token:', tokenAccount);
-        const solIn = Number(process.env.BUY_AMOUNT);
-        console.log('Sol in:', solIn);
-        const slippageDecimal = Number(process.env.SLIPPAGE);
-        console.log('Slippage:', slippageDecimal);
-        const priorityFeeInSol = Number(process.env.PRIORITY_FEE);
-        console.log('Priority fee:', priorityFeeInSol);
-        const sellThreshold = Number(process.env.SELL_THRESHOLD);
-        console.log('Sell threshold:', sellThreshold);
         const walletPrivateKey = await web3_js_1.Keypair.fromSecretKey(new Uint8Array(bs58_1.default.decode(this.bumperPrivateKey)));
+        let solIn = Number(process.env.BUY_AMOUNT);
         try {
             let tokenBalance = 0;
-            if (tokenAccount) {
-                tokenBalance = await (0, get_token_balance_1.default)(tokenAccount);
-            }
-            console.log('Token balance:', tokenBalance);
-            const solBalance = await (0, get_balance_1.default)(this.walletAddress);
-            console.log('Sol balance:', solBalance);
-            if (solBalance < solIn + sellThreshold && tokenBalance > 0) {
+            if (this.counter >= 2) {
+                if (tokenAccount) {
+                    tokenBalance = await (0, get_token_balance_1.default)(tokenAccount);
+                    console.log('Token balance:', tokenBalance);
+                    this.counter = 0;
+                }
                 console.log('Selling token');
                 const sellRespponse = await this.sellTokens(this.sdk, walletPrivateKey, new web3_js_1.PublicKey(this.mintAddress), tokenBalance);
                 console.log('sold token: ', sellRespponse);
@@ -88,6 +86,7 @@ class BumpCommand {
             console.log('Buying token');
             const buyResponse = await this.buyTokens(this.sdk, walletPrivateKey, new web3_js_1.PublicKey(this.mintAddress), solIn);
             console.log('Bump successful: ', buyResponse);
+            this.counter++;
         }
         catch (error) {
             console.error('Error in main function:', error);
